@@ -46,49 +46,16 @@ const Calendar = ({ selectedArtist })  => {
         console.error('Error fetching holidays:', error);
       }
     }
-  };const isHoliday = (date) => {
-    const formattedDate = moment(date).format('YYYY-MM-DD');
-    return holidays.some((holiday) => holiday.date === formattedDate);
   };
-const typofreservation=[
-  'عروسه',
-  'مكياج سهره',
-  'تسريحه شعر',
-  'تركيب رموش ',
-  'عكف رموش',
-  'رفع حواجب',
-  'تركيب اظافر اكريلك',
-  'تركيب اظافر جل',
-  'مساج',
-  'تنظيف بشره',
-  'اكستنشن دائم للشعر',
-]
   useEffect(() => {
     setSelectedDate(null);
   }, [selectedArtist]);
 
 
-  const handlereservationtype = (time) => {
-    setSelectedreservationtype(time);
-    console.log(time)
-
-  };
-  const handleClientSelection = (time) => {
-    setSelectedClient(time);
-    console.log(time)
-
-  };
   
-  const handlestaartTimeSelection = (time) => {
-    setSelectedStartTime(time);
-    console.log(time)
+  
+  
 
-  };
-  const handleendTimeSelection = (time) => {
-    setSelectedEndtTime(time);
-    console.log(time)
-
-  };
   const handleMonthChange = (event) => {
     setSelectedMonth(parseInt(event.target.value));
   };
@@ -102,63 +69,22 @@ const typofreservation=[
 
 
 // Helper function to check if two Date objects have the same hours and minutes
-const isSameTime = (date1, date2) => {
-  return date1.getHours() === date2.getHours() && date1.getMinutes() === date2.getMinutes();
-};
+
 
 // Helper function to check if a slot falls within a reservation
 
 
-const isSlotInReservation = (slotDate, reservation) => {
-  const slotMoment = moment(slotDate);
-  const reservationDate = moment(reservation.date).format('YYYY-MM-DD');
-  const reservationStart = moment(`${reservationDate} ${reservation.start_time}`, 'YYYY-MM-DD HH:mm A');
-  let reservationEnd = moment(`${reservationDate} ${reservation.end_time}`, 'YYYY-MM-DD HH:mm A');
-
-  // If reservation end time is before start time, it means it's on the next day
-  // So, we add one day to the reservation end time
-  if (reservationEnd.isBefore(reservationStart)) {
-    reservationEnd = reservationEnd.add(1, 'day');
-  }
-
-  console.log('Slot Date:', slotMoment.format());
-  console.log('Reservation Start:', reservationStart.format());
-  console.log('Reservation End:', reservationEnd.format());
-
-  // Check if the slot falls within the reservation period or after the reservation end time
-  return slotMoment.isBetween(reservationStart, reservationEnd, null, '[]', 'day') || slotMoment.isSame(reservationEnd);
-};
-
 
 async function handleReservation (e) {
   e.preventDefault(); // Prevent default form submission behavior
-  const formattedDate = moment(selectedDate).format("YYYY-MM-DD");
-  const formattedstartTime = moment(selectedStartTime, "h:mm A").format("HH:mm:ss");
-  const formattedendime = moment(selectedEndtTime, "h:mm A").format("HH:mm:ss");
+  
   const requestData = {
-    'client_id': SelectedClient,
-    'expert_id': selectedArtist.id,
-    'start_time': `${formattedstartTime}`,
-    'end_time': `${formattedendime}`,
-    'date': `${formattedDate}`,
-    'event': [1],
-    'services': [
-      1
-    ],
-    
+ 
+    'date': `${'formattedDate'}`,
+  
   }
  
   
-console.log(selectedDate)
-console.log(selectedArtist.id)
-console.log(formattedstartTime)
-console.log(formattedendime)
-console.log(formattedDate.toString())
-console.log(formattedendime)
-
-console.log(Selectedreservationtype)
-
- 
   try {
     const response = await axios.post(`https://api.march.gomaplus.tech/api/create_reservation`,requestData, {
       headers: {
@@ -190,15 +116,12 @@ const handleDateSelection = (date) => {
     const toDate = new Date(date);
     toDate.setHours(23, 59, 59, 999);
 
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-
-    const formattedFromDate = `${fromDate.getFullYear()}-${String(fromDate.getMonth() + 1).padStart(2, '0')}-${String(fromDate.getDate()).padStart(2, '0')}`;
+    const formattedFromDate = fromDate.toISOString(); // Format the date as ISO string
     const formattedToDate = toDate.toISOString(); // Format the date as ISO string
-    const reservationsUrl = `https://api.march.gomaplus.tech/api/client_reservations?expert_id=${selectedArtist.id}&from_date=${formattedFromDate}`;
+    const reservationsUrl = `https://api.march.gomaplus.tech/api/client_reservations?per_page=1000000&expert_id=${selectedArtist.id}&from_date=${formattedFromDate}`;
     const clientssUrl='https://api.march.gomaplus.tech/api/list_of_client'
 
-    console.log(selectedArtist.id)
-    console.log(formattedFromDate)
+
     axios
     .get(clientssUrl, {
       headers: {
@@ -206,11 +129,7 @@ const handleDateSelection = (date) => {
       },
     })
 .then((response)=>{
-  console.log('response.data.data')
-
 console.log(response.data.data)
-console.log('response.data.data')
-
 setclients(response.data.data)
 })
     axios
@@ -220,9 +139,7 @@ setclients(response.data.data)
         },
       })
       .then((response) => {
-
         const reservations = response.data.data;
-        console.log(reservations)
         const startTime = new Date(date);
         startTime.setHours(9, 0, 0, 0);
         const endTime = new Date(date);
@@ -235,22 +152,8 @@ setclients(response.data.data)
           current.setMinutes(current.getMinutes() + 30);
         }
 
-        const freeSlots = allSlots.filter((slotTime) => {
-          for (const reservation of reservations) {
-            if (isSlotInReservation(slotTime, reservation) || isSameTime(slotTime, new Date(reservation.end_time))) {
-              return false;
-            }
-          }
-          return true;
-        });
-
-        const formattedFreeSlots = freeSlots.map((slot) =>
-          slot.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: '2-digit' })
-        );
-
-        console.log('Free Time Slots:');
-        console.log(formattedFreeSlots);
-        setsetAvailableTime(formattedFreeSlots)
+       
+    
 
         // Update the state with the new free slots
         setArtistReservations(reservations);
@@ -276,7 +179,7 @@ const generateCalendarDays = () => {
     const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
     const isHoliday = holidays.includes(moment(date).format('YYYY-MM-DD'));
     const dayClassName = `p-2 cursor-pointer text-center ${
-      isSelected ? 'bg-[#E21684] text-white' : isHoliday ? 'bg-red-400 text-white' : 'bg-[#D9D9D9]'
+      isSelected ? 'border-2 border-red-500' : isHoliday ? 'border-2 border-red-500' : 'bg-[#D9D9D9]'
     }`;
 
     days.push(
@@ -350,7 +253,7 @@ return (
     <div className="mx-auto max-w-md p-4">
       <div className="mb-4 flex justify-between" >
         <select
-          className="block  border-none bg-[#F0F0F0CC] rounded p-2"
+          className="block   border-none bg-[#F0F0F0CC] rounded p-2"
           value={selectedMonth}
           onChange={handleMonthChange}
         >
@@ -399,25 +302,14 @@ return (
       <h2 className='text-right mb-5 text-lg'>:اختر الساعة<span className='font-bold ml-2'>.</span></h2>
       <div className='flex justify-between'>
       <div className='flex'>
-      <Start paasedarr={AvailableTime} onSelectTime={handlestaartTimeSelection} />
-      <h2 className='ml-4'>:بدء الموعد</h2>
+      <Start paasedarr={AvailableTime}  />
+      <h2 className='ml-4'>:اجازة</h2>
       </div>
-      <div className='flex'>
-      <Start paasedarr={getFilteredEndTimes(selectedStartTime)} onSelectTime={handleendTimeSelection} />
-      <h2 className='ml-4'>نهاية الموعد</h2>
+ 
       </div>
-      </div>
-      <div className='mt-10'><Reservation clients={clients} onSelectClient={handleClientSelection}/></div>
-       <div className='flex justify-end mt-10'>
-       <Start paasedarr={typofreservation}  onSelectTime={handlereservationtype}/>
-        <h2 className='text-right mb-5 ml-2 '>: المناسبة <span className='font-bold ml-2'>.</span></h2>
-      </div>
-   {/**   <div className='flex justify-between mt-16'>
-       <h2 className='text-[#2E94DE] border-b border-b-[#2E94DE] mb-10 w-20'>إضافة خدمة</h2>
-       <h2 className='text-right mb-5  text-lg'>: الخدمات الرئيسية<span className='font-bold ml-2'>.</span></h2>
-       </div>
-       <Services/>
-       */} 
+ 
+  
+     
     </div>
      
   

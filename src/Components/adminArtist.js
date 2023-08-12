@@ -42,16 +42,15 @@ const [artistsData, setArtistsData] = useState([]);
         className={`border-b-2 border-[#F9C688] ${selectedRow === index ? 'bg-[#F9C688]' : ''}`}
         onClick={() => handleRowClick(index)}
       >
-              <td className='py-2'>
-          <a href='#' className='hover:text-gray-700 focus:text-gray-500 focus:underline'>
-            انقر لحجز موعد
-          </a>
-        </td>
-        <td className='py-2'>{artist.position}</td>
-        <td className={` ${selectedRow === index ? 'bg-[#F9C688]' : 'bg-[#E5E5E5]'} flex flex-col justify-center sm:flex-row sm:justify-between p-3`}>
-          <p className='text-center mt-3 -mr-10 sm:text-right sm:w-24'>{artist.name}</p>
-          <img src={artist.image} className='w-14 h-14 mx-auto sm:mx-0' alt={artist.name} />
-        </td>
+      <td className='py-2'>{artist.position}</td>
+
+      <td className={` ${selectedRow === index ? 'bg-[#F9C688]' : 'bg-[#E5E5E5]'} flex flex-col justify-center sm:flex-row sm:justify-between p-3`}>
+      <p className='text-center mt-3 -mr-10 sm:text-right sm:w-24'>{artist.name}</p>
+      <img src={artist.image} className='w-14 h-14 mx-auto sm:mx-0' alt={artist.name} />
+    </td>
+        <td className='py-2'>{artist.id}</td>
+
+        
       </tr> 
     ));
   };
@@ -59,12 +58,13 @@ const [artistsData, setArtistsData] = useState([]);
   return (
     <div className='w-[100%] h-[100%] bg-[#F0F0F0CC]'>
       <table className='w-full text-center'>
-        <thead>
-          <tr className='border-b-2 border-[#F9C688] h-14'>
-            <th className='font-bold'>الحجوزات</th>
+        <thead className=''>
+          <tr className='border-b-2 border-[#F9C688] h-14 '>
             <th className='font-bold'>الاختصاص</th>
-            <th className='bg-[#E5E5E5] font-bold'>الاسم</th>
-          </tr>
+            <th className=' font-bold'>الاسم</th>
+            <th className=' font-bold'>ID</th>
+
+            </tr>
         </thead>
         <tbody>{generateRows()}</tbody>
         

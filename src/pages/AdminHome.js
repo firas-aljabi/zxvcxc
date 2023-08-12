@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Calendar from '../Components/Calendar';
-import NavBar from '../Components/NavBar';
-import Artists from '../Components/Artists';
+import Calendar from '../Components/AdminCalender';
+import NavBar from '../Components/AdminNavbar';
+import Artists from '../Components/adminArtist';
 
-const Home = () => {
+const AdminHome = () => {
   const [selectedArtist, setSelectedArtist] = useState(null);
   const [artistHolidays, setArtistHolidays] = useState([]);
 
@@ -37,4 +37,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AdminHome;
