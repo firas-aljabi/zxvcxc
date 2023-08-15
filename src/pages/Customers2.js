@@ -6,13 +6,20 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import UnConfirmedReservation from '../Components/UnConfirmedReservation'
 import ReservationInfrrmation from '../Models/ReservationInfrrmation'
+import AddNewClient from '../Models/AddNewClient'
+
 
 
 const Customers = () => {
   const [clientREservations,setClientREservations]=useState([])
-  const [showModel , setshowModel] = useState(true);
-  const [SelecteReservation , setSelecteReservation] = useState(1);
+  const [showModel , setshowModel] = useState(false);
+  const [showAddnewClient , setshowAddnewClient] = useState(false);
 
+  const [SelecteReservation , setSelecteReservation] = useState(1);
+  const [open , setOpen] = useState(false)
+  function opened(){
+    setOpen(!open)
+ }
   const handleonReservationSelect = (reservationId) => {
     setSelecteReservation(reservationId);
     setshowModel(true);
@@ -73,6 +80,11 @@ async function getReservations(){
   return (
     <div>
 
+    {showAddnewClient && (
+      <div className='absolute right-1'>
+        <AddNewClient onModelClose={() => setshowAddnewClient(false)} />
+      </div>
+    )}
     {showModel && (
       <div className='absolute right-1'>
         <ReservationInfrrmation data={SelecteReservation} onModelClose={() => setshowModel(false)} />
@@ -80,64 +92,59 @@ async function getReservations(){
     )}
    {/**  <button onClick={() => setshowModel(!showModel)}>Toggle Model</button>  */}
 
-    <div className=' bg-white items-center flex justify-center'>
-            <div className='w-[88%] h-[90%]'>
-                <div className='flex justify-between'>
-                    <button className='border-2 border-black w-44 h-14' onClick={()=> nav('/login')}>تسجيل خروج</button>
-                    <div className='w-96 flex justify-end'>
-                    <div>
-                    <h2 className='text-[#D4821F] mt-5 mr-24 cursor-pointer ' onClick={()=> nav('/customer')}>الزبائن</h2>
-                    <div className='m-2 ml-5 w-6 border-b-2 border-[#D4821F]'></div>
-                    </div>
-                    <div >
-                    <h2 className='text-black mt-5  cursor-pointer' onClick={()=> nav('/')}>الصفحة الرئيسية</h2>
-                    </div>
-                    </div>
-                    <img src={logo} className='w-20 h-20'/>
-                </div>
-                <div>
-                     <div className='flex justify-end'>
-        <Link
-          to="/confirm"
-             >
-                 <div className={toggleState === 1 ? " text-white bg-gradient-to-b from-[#F5C8909E] to-[#E3AB67]  mt-3 p-1 flex justify-center xxs:w-28 xs:w-40  rounded-l-sm": " text-white bg-[#D9D9D9] mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-l-sm"}
-                onClick={() => toggleTap(1)}
-                >
-                  <h1 className='text-sm p-1'>الحجوزات المثبتة</h1>
-                </div>
-                </Link>
-                <Link
-          to="/unConfirm"
-             >
-                 <div className={toggleState === 2 ? " text-white bg-gradient-to-b from-[#F5C8909E] to-[#E3AB67]   mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-r-sm": "text-white bg-[#D9D9D9] mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-r-sm "}
-                onClick={() => toggleTap(2)}
-                >
-                  <h1 className='text-sm p-1'>غير المثبتة</h1>
-                </div>
-                </Link>
-        </div>
-                </div>
-                <div className='flex justify-between mt-10'>
-                    <div className='flex'>
-                        <div >
-                        <img src={search} alt="Search Icon" class="absolute left-[25%] mt-4 h-4 w-4"/>
-                <input type="text" placeholder="بحث" class="w-64 h-12 border mr-5 bg-[#E7E7E787] placeholder:mr-5 placeholder:text-[#FFFFFF] placeholder:text-right placeholder:text-sm py-2 px-4 relative "/>
-                </div>
-                <button className='w-44 h-12 border-2 border-[rgb(227,171,103)] text-[#D4821F] text-sm'>اضافة زبون جديد</button>
-                </div>
-                    <h2 className='text-3xl text-right text-[#D4821F]'>الزبائن وتاريخ الحجوزات</h2>
-                </div>
-                <div className='mt-8'>
-                <table className='w-full h-full text-center  '>
-                     
-                     </table>
-                     
-                </div>
-                <UnConfirmedReservation Data={clientREservations} onReservationSelect={handleonReservationSelect}/>
-            </div>
-        </div>
-    </div>
-  )
+   <div className=' bg-white items-center flex justify-center'>
+   <div className='w-[88%] h-[90%]'>
+       <div className='flex justify-between'>
+           <button className='border-2 border-black w-44 h-14' onClick={()=> nav('/login')}>تسجيل خروج</button>
+           <div className='w-96 flex justify-end'>
+           <div>
+           <h2 className='text-[#D4821F] mt-5 mr-24 cursor-pointer ' onClick={()=> nav('/customer')}>الزبائن</h2>
+           <div className='m-2 ml-5 w-6 border-b-2 border-[#D4821F]'></div>
+           </div>
+           <div >
+           <h2 className='text-black mt-5 cursor-pointer' onClick={()=> nav('/home')}>الصفحة الرئيسية</h2>
+           </div>
+           </div>
+           <img src={logo} className='w-20 h-20'/>
+       </div>
+       <div>
+            <div className='flex justify-end' onClick={opened}>
+<div
+    >
+        <div className={toggleState === 1 ? " text-white bg-gradient-to-b from-[#F5C8909E] to-[#E3AB67]  mt-3 p-1 flex justify-center xxs:w-28 xs:w-40  rounded-l-sm": " text-white bg-[#D9D9D9] mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-l-sm"}
+       onClick={() => {toggleTap(1) ; setOpen(!open)}}
+       >
+         <h1 className='text-sm p-1'>الحجوزات المثبتة</h1>
+       </div>
+       </div>
+       <div
+    >
+        <div className={toggleState === 2 ? " text-white bg-gradient-to-b from-[#F5C8909E] to-[#E3AB67]   mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-r-sm": "text-white bg-[#D9D9D9] mt-3 p-1 flex justify-center  xxs:w-28  xs:w-40  rounded-r-sm "}
+       onClick={() => {toggleTap(2) ; setOpen(!open)}}
+       >
+         <h1 className='text-sm p-1'>غير المثبتة</h1>
+       </div>
+       </div>
+</div>
+       </div>
+       <div className='flex justify-between mt-10 '>
+           <div className='flex '>
+               <div className=' relative'>
+               <img src={search} alt="Search Icon" class="absolute right-[10%] mt-4 h-4 w-4"/>
+       <input type="text" placeholder="بحث" class="w-64 h-12 border mr-5 bg-[#E7E7E787] placeholder:mr-5 placeholder:text-[#FFFFFF] placeholder:text-right placeholder:text-sm py-2 px-4 relative "/>
+       </div>
+       <button onClick={()=>{setshowAddnewClient(true)}} className='w-44 h-12 border-2 border-[rgb(227,171,103)] text-[#D4821F] text-sm'>اضافة زبون جديد</button>
+       </div>
+           <h2 className='text-3xl text-right text-[#D4821F]'>الزبائن وتاريخ الحجوزات</h2>
+       </div>
+       <div className='mt-8'>
+       <UnConfirmedReservation Data={clientREservations} onReservationSelect={handleonReservationSelect}/>
+       </div>
+      
+   </div>
+</div>
+</div>
+)
 }
 
 export default Customers

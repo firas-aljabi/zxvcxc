@@ -16,36 +16,37 @@ const Reservation = ({clients, onSelectClient }) => {
   }, [clients]);
   return (
    
-    <div className="w-full font-medium  ">
+    <div className="w-full font-medium flex justify-end">
+      <div>
       <div
         onClick={() => setOpen(!open)}
-        className={` flex items-center rounded  ${
-          !selected && "text-gray-700"
+        className={` flex items-center rounded relative ${
+          !selected && "text-gray-700 text-[12px] mr-3"
         }`}
       >
-        <BiChevronDown size={20} className={`${open && "rotate-180 "}`} /> 
+        <BiChevronDown size={20} color="" className={`absolute left-1 ${open && "rotate-180 "}`} /> 
          <input
             type="text"
             value= {
           inputValue}
             onChange={(e) => {setInputValue(e.target.value)}}
             placeholder="Enter name"
-            className="placeholder:text-gray-700 p-3 w-32 border outline-none border-black ml-3"
+            className="placeholder:text-[#D4821F] p-3 w-28 text-center text-[#D4821F] text-[12px] border outline-none border-black bg-[#F7F7F8]"
           />
       </div>
       <ul
-        className={`bg-white mt-2 overflow-y-scroll  ${
-          open ? "max-h-60 " : "max-h-0"
+        className={`bg-white rounded-lg  w-28 mt-2 overflow-y-scroll scrollbar-hide z-50 ${
+          open ? "max-h-28 " : "max-h-0"
         } `}
       >
       
         {data?.map((country) => (
           <li
             key={country.id}
-            className={`p-2 text-sm hover:bg-sky-600 hover:text-white
+            className={`p-2 text-xs hover:bg-gray-100
             ${
               country?.name?.toLowerCase() === selected?.toLowerCase() &&
-              "bg-sky-600 text-white"
+              "hover:bg-gray-100 "
             }
             ${
               country?.name?.toLowerCase().startsWith(inputValue)
@@ -65,6 +66,7 @@ const Reservation = ({clients, onSelectClient }) => {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 };

@@ -50,19 +50,20 @@ const Calendar = ({ selectedArtist })  => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     return holidays.some((holiday) => holiday.date === formattedDate);
   };
-const typofreservation=[
-  'عروسه',
-  'مكياج سهره',
-  'تسريحه شعر',
-  'تركيب رموش ',
-  'عكف رموش',
-  'رفع حواجب',
-  'تركيب اظافر اكريلك',
-  'تركيب اظافر جل',
-  'مساج',
-  'تنظيف بشره',
-  'اكستنشن دائم للشعر',
-]
+  const reservationTypeMappings = {
+    'عروسه': 1,
+    'مكياج سهره': 2,
+    'تسريحه شعر': 3,
+    'تركيب رموش': 4,
+    'عكف رموش': 5,
+    'رفع حواجب': 6,
+    'تركيب اظافر اكريلك': 7,
+    'تركيب اظافر جل': 8,
+    'مساج': 9,
+    'تنظيف بشره': 10,
+    'اكستنشن دائم للشعر': 11,
+  };
+  
   useEffect(() => {
     setSelectedDate(null);
   }, [selectedArtist]);
@@ -78,7 +79,8 @@ const typofreservation=[
     console.log(time)
 
   };
-  
+  const eventNumber = reservationTypeMappings[Selectedreservationtype];
+
   const handlestaartTimeSelection = (time) => {
     setSelectedStartTime(time);
     console.log(time)
@@ -140,25 +142,17 @@ async function handleReservation (e) {
     'expert_id': selectedArtist.id,
     'start_time': `${formattedstartTime}`,
     'end_time': `${formattedendime}`,
-    'date': `${formattedDate}`,
-    'event': [1],
-    'services': [
-      1
-    ],
+    'date': `${formattedDate} 00:00:00`,
+    'event': [eventNumber], // Use the mapped event number
+     
     
   }
  
   
-console.log(selectedDate)
-console.log(selectedArtist.id)
-console.log(formattedstartTime)
-console.log(formattedendime)
-console.log(formattedDate.toString())
-console.log(formattedendime)
+  console.log(`${formattedDate} 00:00:00`)
 
-console.log(Selectedreservationtype)
+  console.log(eventNumber)
 
- 
   try {
     const response = await axios.post(`https://api.march.gomaplus.tech/api/create_reservation`,requestData, {
       headers: {
@@ -283,7 +277,7 @@ const generateCalendarDays = () => {
       <div
         key={`day-${i}`}
         className={dayClassName}
-        onClick={() => handleDateSelection(date)}
+        onClick={() =>isHoliday? '':handleDateSelection(date)}
       >
         {i}
       </div>
@@ -317,7 +311,7 @@ const getFilteredEndTimes = (startTime) => {
     if (nextHalfHour) {
       filteredTimes.push(nextHalfHour);
     }
-
+    filteredTimes.shift()
     return filteredTimes;
   }
   return [];
@@ -339,93 +333,99 @@ const isNextHalfHour = (nextTime, currentTime) => {
 const getNextHalfHour = (time) => {
   const hour = parseInt(time.split(':')[0]);
   const minutes = parseInt(time.split(' ')[0].split(':')[1]);
-  if (minutes === 30) {
+  if(hour==12 &&minutes==30){
+    return `${1}:00 ${time.split(' ')[1]}`;
+  }
+  else if (minutes === 30) {
     return `${hour + 1}:00 ${time.split(' ')[1]}`;
   }
+  
   return `${hour}:${minutes + 30} ${time.split(' ')[1]}`;
 };
 
 
 return (
-    <div className="mx-auto max-w-md p-4">
-      <div className="mb-4 flex justify-between" >
-        <select
-          className="block  border-none bg-[#F0F0F0CC] rounded p-2"
-          value={selectedMonth}
-          onChange={handleMonthChange}
-        >
-          <option value={0}>January</option>
-          <option value={1}>February</option>
-          <option value={2}>March</option>
-          <option value={3}>April</option>
-          <option value={4}>May</option>
-          <option value={5}>June</option>
-          <option value={6}>July</option>
-          <option value={7}>August</option>
-          <option value={8}>September</option>
-          <option value={9}>October</option>
-          <option value={10}>November</option>
-          <option value={11}>December</option>
-        </select>
-        <h2 className=''>:اختر اليوم.</h2>
-     
-      </div>
-    <div className="grid grid-cols-7 gap-2">
-   <div className="text-center text-gray-500">الاحد</div>
-        <div className="text-center text-gray-500">الاثنين</div>
-        <div className="text-center text-gray-500">الثلاثاء</div>
-        <div className="text-center text-gray-500">الاريعاء</div>
-        <div className="text-center text-gray-500">الخميس</div>
-        <div className="text-center text-gray-500">الجمعة</div>
-        <div className="text-center text-gray-500">السبت</div>
-        {generateCalendarDays()}
-      </div>
-      <div className='flex justify-end '>
-      <div className='flex '>
-      <h1 className=''>مختار</h1>
-<div className='w-3 h-3 bg-red-400 items-center mt-2 mr-5 ml-2'></div>
-      </div>
-      <div className='flex '>
-      <h1 className=''>محجوز</h1>
-      <div className='w-3 h-3 bg-red-400 items-center mt-2 mr-5 ml-2'></div>
-      </div>
+  <div className="mx-auto max-w-md p-4">
+  <div className='flex justify-between'>
+  <button className='bg-[#F9C688] w-28 p-1 text-center text-white text-sm' onClick={handleReservation}>حفظ</button>
+  <h2 className='font-bold'>صباح عسيري</h2>
+  </div>
+  <div className="mb-4 flex justify-between mt-7" >
+    <select
+      className="block  border-none bg-[#F0F0F0CC] rounded p-2"
+      value={selectedMonth}
+      onChange={handleMonthChange}
+    >
+      <option value={0}>January</option>
+      <option value={1}>February</option>
+      <option value={2}>March</option>
+      <option value={3}>April</option>
+      <option value={4}>May</option>
+      <option value={5}>June</option>
+      <option value={6}>July</option>
+      <option value={7}>August</option>
+      <option value={8}>September</option>
+      <option value={9}>October</option>
+      <option value={10}>November</option>
+      <option value={11}>December</option>
+    </select>
+    <h2 className=''>:اختر اليوم.</h2>
+ 
+  </div>
+<div className="grid grid-cols-7 gap-2">
+<div className="text-center text-gray-500">الاحد</div>
+    <div className="text-center text-gray-500">الاثنين</div>
+    <div className="text-center text-gray-500">الثلاثاء</div>
+    <div className="text-center text-gray-500">الاريعاء</div>
+    <div className="text-center text-gray-500">الخميس</div>
+    <div className="text-center text-gray-500">الجمعة</div>
+    <div className="text-center text-gray-500">السبت</div>
+    {generateCalendarDays()}
+  </div>
+  <div className='flex justify-end '>
+  <div className='flex '>
+  <h1 className=''>مختار</h1>
+<div className='w-3 h-3 bg-[#F5C890] items-center mt-2 mr-5 ml-2'></div>
+  </div>
+  <div className='flex '>
+  <h1 className=''>محجوز</h1>
+  <div className='w-3 h-3 bg-[#F5C89073] items-center mt-2 mr-5 ml-2'></div>
+  </div>
 
-      <div className='flex '>
-      <h1 className=''>متاح</h1>
-      <div className='w-3 h-3 bg-red-400 items-center mt-2 mr-5 ml-2'></div>
-      </div>
-      </div>
-      <div className='p-5 '>
-      <h2 className='text-right mb-5 text-lg'>:اختر الساعة<span className='font-bold ml-2'>.</span></h2>
-      <div className='flex justify-between'>
-      <div className='flex'>
-      <Start paasedarr={AvailableTime} onSelectTime={handlestaartTimeSelection} />
-      <h2 className='ml-4'>:بدء الموعد</h2>
-      </div>
-      <div className='flex'>
-      <Start paasedarr={getFilteredEndTimes(selectedStartTime)} onSelectTime={handleendTimeSelection} />
-      <h2 className='ml-4'>نهاية الموعد</h2>
-      </div>
-      </div>
-      <div className='mt-10'><Reservation clients={clients} onSelectClient={handleClientSelection}/></div>
-       <div className='flex justify-end mt-10'>
-       <Start paasedarr={typofreservation}  onSelectTime={handlereservationtype}/>
-        <h2 className='text-right mb-5 ml-2 '>: المناسبة <span className='font-bold ml-2'>.</span></h2>
-      </div>
-   {/**   <div className='flex justify-between mt-16'>
-       <h2 className='text-[#2E94DE] border-b border-b-[#2E94DE] mb-10 w-20'>إضافة خدمة</h2>
-       <h2 className='text-right mb-5  text-lg'>: الخدمات الرئيسية<span className='font-bold ml-2'>.</span></h2>
-       </div>
-       <Services/>
-       */} 
-    </div>
-     
-  
-      <button onClick={handleReservation}>asdasd</button>
-   
-    </div>
-  );
-  };
+  <div className='flex '>
+  <h1 className=''>متاح</h1>
+  <div className='w-3 h-3 bg-[#D9D9D9CC] items-center mt-2 mr-5 ml-2'></div>
+  </div>
+  </div>
+  <div className='p-5 '>
+  <h2 className='text-right mb-5 text-lg'>:اختر الساعة<span className='font-bold ml-2'>.</span></h2>
+  <div className='flex justify-between mr-1'>
+  <div className='flex'>
+  <Start paasedarr={AvailableTime} onSelectTime={handlestaartTimeSelection} />
+  <h2 className='ml-1 text-xs'>:بدء الموعد</h2>
+  </div>
+  <div className='flex'>
+  <Start paasedarr={getFilteredEndTimes(selectedStartTime)} onSelectTime={handleendTimeSelection} />
+  <h2 className='ml-1 text-xs'>:نهاية الموعد</h2>
+  </div>
+  </div>
+  <div className='flex justify-end mt-10'>
+    <Reservation  clients={clients} onSelectClient={handleClientSelection}/>
+    <h2 className='text-right mb-5 text-xs whitespace-nowrap'>: حجز بإسم<span className='font-bold'>.</span></h2>
+  </div>
+   <div className='flex justify-end mt-10'>
+   <Start paasedarr={Object.keys(reservationTypeMappings)}  onSelectTime={handlereservationtype}/>
+    <h2 className='text-right mb-5 ml-1 text-xs'>: المناسبة <span className='font-bold ml-2'>.</span></h2>
+  </div>
+{/**   <div className='flex justify-between mt-16'>
+   <h2 className='text-[#2E94DE] border-b border-b-[#2E94DE] mb-10 w-20'>إضافة خدمة</h2>
+   <h2 className='text-right mb-5  text-lg'>: الخدمات الرئيسية<span className='font-bold ml-2'>.</span></h2>
+   </div>
+   <Services/>
+   */} 
+</div>   
+</div>
+);
+};
 export default Calendar;
-
 

@@ -21,26 +21,26 @@ function NavBar() {
         <div>
           <h2
             className={`relative mt-5 mr-20 cursor-pointer ${
-              activeLink === 0 ? 'text-[#E21684]' : ''
+              activeLink === 0 ? 'text-[#D4821F]' : ''
             }`}
-            onClick={() => handleLinkClick(0)}
+            onClick={() => {handleLinkClick(0) ; nav('/asd')}}
           >
             الزبائن
             {activeLink === 0 && (
-              <div className='absolute w-6 bottom-[-10] right-0 bg-[#E21684] h-0.5'></div>
+              <div className='absolute w-6 bottom-[-10] right-0 bg-[#D4821F] h-0.5'></div>
             )}
           </h2>
         </div>
         <div>
           <h2
             className={`relative mt-5 cursor-pointer ${
-              activeLink === 1 ? 'text-[#E21684]' : ''
+              activeLink === 1 ? 'text-[#D4821F]' : ''
             }`}
-            onClick={() => handleLinkClick(1)}
+            onClick={() => {handleLinkClick(1) ; nav('/home')}}
           >
             الصفحة الرئيسية
             {activeLink === 1 && (
-              <div className='absolute w-12 bottom-[-10] right-0 bg-[#E21684] h-0.5'></div>
+              <div className='absolute w-12 bottom-[-10] right-0 bg-[#D4821F] h-0.5'></div>
             )}
           </h2>
         </div>

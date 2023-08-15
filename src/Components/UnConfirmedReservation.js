@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import Customers from '../pages/Customers2';
 import ReservationInfrrmation from '../Models/ReservationInfrrmation';
+import { IconName } from "react-icons/ai";
 
 
 
@@ -45,36 +46,58 @@ const UnConfirmedReservation = ({ Data,onReservationSelect }) => {
       }
     
     return (
-        <div>
-        
-          <table className="w-full text-center border-2">
-          
+      <div>
+        <div className='flex justify-center'>
+          <table className=" text-center border">
             <tbody>
               <tr>
                 {displayedData.map((customer, i) => (
-                  <th key={i} className="bg-[#E5E5E5] font-bold border-2 border-[#D9D9D9CC] p-3">
+                  <th key={i} className="bg-[#E5E5E5] font-bold border-[#D9D9D9CC] p-3">
                     {customer.client.name}
                   </th>
                 ))}
               </tr>
-              <tr className=' items-start' >
+
                 {displayedData.map((customer, i) => (
-                  <td key={i} className="border-2 border-[#D9D9D9CC] p-3  ">
-                    <ul >
+                  <td key={i} className="border-2 border-[#D9D9D9CC]">
+                    <ul className='-my-px -mx-px'>
                       {customer.reservations.map((date, j) => (
-               <li onClick={()=>{onReservationSelect(date.id)}} key={j} className={`border-2 border-[#D9D9D9CC] p-3 date.status ${date.status==2?"bg-red-600":''} `}>
+                       date.status==1||date.status==4?
+               <li onClick={()=>{onReservationSelect(date.id)}} key={j} className={` border-y w-32 border-[#D9D9D9CC] p-3 date.status `}>
                           {date.date}
-                          {date.expert}
-                          
                         </li>
+                        :date.status==2?
+                        <li onClick={()=>{onReservationSelect(date.id)}} key={j} className={` border-y w-32 border-[#D9D9D9CC] p-3 date.status  `}>
+
+                        <div>
+                       
+                          <h2 className='text-[#ED3249] text-xs text-center'>حجز ملغي</h2>
+                          </div>
+                        <h2 className='text-center text-xs'> {date.date}</h2>
+                        <h2 className='text-center text-xs'> {date.expert}</h2>
+                      
+                        </li>   :date.status=3?
+                        <li onClick={()=>{onReservationSelect(date.id)}} key={j} className={` border-y w-32 border-[#D9D9D9CC] p-3 date.status `}>
+
+                        <div>
+                       
+                          <h2 className='text-[#2E94DE] text-xs'>حجز مؤجل</h2>
+                        </div>
+                        <h2 className='text-center text-xs'> {date.date}</h2>
+                        <h2 className='text-center text-xs'> {date.expert}</h2>
+                    
+
+                        </li> 
+                        
+                        :''
                       ))}
                     </ul>
                   </td>
                 ))}
-              </tr>
+            
             </tbody>
           </table>
-         
+          </div>
           {/* Pagination */}
           <nav>
 
@@ -105,3 +128,10 @@ const UnConfirmedReservation = ({ Data,onReservationSelect }) => {
     };
     
     export default UnConfirmedReservation;
+
+
+
+
+
+
+    

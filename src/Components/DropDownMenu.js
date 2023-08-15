@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import chevron from '../Images/chevron-down (1).png'
 
 const Start = ({ paasedarr, onSelectTime }) => {
   const [start, setStart] = useState(false);
@@ -11,23 +12,23 @@ const Start = ({ paasedarr, onSelectTime }) => {
   }
 
   return (
-    <div className=''>
+    <div className='w-[100%]'>
       <div>
         <button
-          className='border border-[#000000] p-3'
+          className='border border-[#000000] p-3 w-[100%] h-14'
           type='button'
           onClick={asdd}
         >
-          <div className='flex'>
-        
-            <h2 className='text-[#D4821F]'>{selected}</h2>
+          <div className='flex relative'>
+          <img className={`w-4 h-4 ${start?'rotate-180':''} `} src={chevron} />
+            <h2 className='text-[#D4821F] text-[11px] right-[0%]'>{selected}</h2>
           </div>
         </button>
       </div>
       {start && (
         <div
           id='dropdownHover'
-          className='z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-28 absolute'
+          className='z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-28 h-28 overflow-y-scroll absolute scrollbar-hide'
         >
           <ul class='py-2 text-sm text-gray-700'>
             {paasedarr.map((item, index) => {

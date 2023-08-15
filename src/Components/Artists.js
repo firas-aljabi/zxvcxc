@@ -58,18 +58,18 @@ const [artistsData, setArtistsData] = useState([]);
 
   return (
     <div className='w-[100%] h-[100%] bg-[#F0F0F0CC]'>
-      <table className='w-full text-center'>
-        <thead>
-          <tr className='border-b-2 border-[#F9C688] h-14'>
-            <th className='font-bold'>الحجوزات</th>
-            <th className='font-bold'>الاختصاص</th>
-            <th className='bg-[#E5E5E5] font-bold'>الاسم</th>
-          </tr>
-        </thead>
-        <tbody>{generateRows()}</tbody>
-        
-      </table>
-    </div>
+    <table className='w-full text-center'>
+      <thead>
+        <tr className='border-b-2 border-[#F9C688] h-14'>
+          <th className='font-bold'>الحجوزات</th>
+          <th className='font-bold'>الاختصاص</th>
+          <th className='bg-[#E5E5E5] font-bold'>الاسم</th>
+        </tr>
+      </thead>
+      <tbody>{generateRows()}</tbody>
+      
+    </table>
+  </div>
   );
 }
 
